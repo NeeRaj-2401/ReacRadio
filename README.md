@@ -14,9 +14,6 @@ Its aim is to provides a simple and smooth user experience with features includi
    - **Home Page**  <br>
   <img src="./src/images/homepage.JPG" width="45%" alt="TrendingPage"> <br> <br>
 
-## ToDo
-
-- [ ] code cleanups (help wanted)
 
 ## Acknowledgements 🙏
 - [Radio-Browser](https://www.radio-browser.info/)

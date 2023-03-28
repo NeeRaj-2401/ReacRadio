@@ -13,7 +13,8 @@ function App() {
     setIsLoading(true);
     try {
       axios
-        .get(`https://de1.api.radio-browser.info/json/stations/topclick`)
+        .get(`https://de1.api.radio-browser.info/json/stations/bycountry/india?order=clickcount&reverse=true`)
+        //fetches indian radios in order to most clicked on top
         .then(response => {
           const results = response.data;
           //console.log(response.data)
@@ -21,15 +22,20 @@ function App() {
           // filtering duplicate results
           const filteredStations = Object.values(results.reduce((map, station) => {
             const url = station.url;
-            if (station.language !== "hindi" || station.country !== "India" || url.startsWith("http://") || url.endsWith(".m3u8")) {
-              return map; // skip stations if not hindi/india or having hrl http:// or .m3u8
+
+            if (
+              (station.language !== "hindi" && station.language !== "") ||
+              url.startsWith("http://") ||
+              url.endsWith(".m3u8") 
+            ) {
+              return map; // skip stations if not hindi/india or having hrl http:// or .m3u8 or already exists in map
             }
 
-            if (!map[url]) {
-              map[url] = station; // add the station to the map if it hasn't been seen before
-            }
+            map[url] = station; // add the station to the map if it hasn't been seen before
+
             return map;
-          }, {}))
+          }, {}));
+
           console.log(filteredStations)
           setStations(filteredStations);
           setIsLoading(false);
@@ -64,7 +70,7 @@ function App() {
 
   return (
     <div className="App min-h-screen bg-gray-900 text-gray-100 py-4">
-      <h1 className="text-2xl font-bold text-gray-100 pb-4">Trending Hindi Stations</h1>
+      <h1 className="text-2xl font-bold text-gray-100 pb-4">Trending Indian Stations</h1>
       <div className="container mx-auto px-4 md:px-0 mt-4 sm:mt-10 ">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-10">
 
@@ -80,26 +86,26 @@ function App() {
 
             >
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-gray-700 mr-4 cursor-pointer" onClick={() => handleStationClick(station)}>
-                { (currentStation?.url === station.url  && isPlaying) ?
-                ( // if element is currently playing then show playing gif
-                  <img
-                    src="https://i.gifer.com/Nt6v.gif"
-                    alt={station.favicon}
-                    className="w-8 h-8 object-cover object-center rounded-full"
-                  />
-                ) 
-                :                   
-                ( // else for rest elements show station's icon
-                  station.favicon ? (
+                {(currentStation?.url === station.url && isPlaying) ?
+                  ( // if element is currently playing then show playing gif
                     <img
-                      src={station.favicon}
-                      alt={station.name}
+                      src="https://i.gifer.com/Nt6v.gif"
+                      alt={station.favicon}
                       className="w-8 h-8 object-cover object-center rounded-full"
                     />
-                  ) :
-                    (
-                      <FiRadio className="h-6 w-6 text-gray-100" />
-                    ))
+                  )
+                  :
+                  ( // else for rest elements show station's icon
+                    station.favicon ? (
+                      <img
+                        src={station.favicon}
+                        alt={station.name}
+                        className="w-8 h-8 object-cover object-center rounded-full"
+                      />
+                    ) :
+                      (
+                        <FiRadio className="h-6 w-6 text-gray-100" />
+                      ))
                 }
 
               </div>
