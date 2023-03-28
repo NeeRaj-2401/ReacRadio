@@ -80,7 +80,7 @@ function App() {
 
             >
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-gray-700 mr-4 cursor-pointer" onClick={() => handleStationClick(station)}>
-                {currentStation?.url === station.url ? 
+                { (currentStation?.url === station.url  && isPlaying) ?
                 ( // if element is currently playing then show playing gif
                   <img
                     src="https://i.gifer.com/Nt6v.gif"
