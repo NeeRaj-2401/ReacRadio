@@ -10,7 +10,7 @@ const Navbar = () => {
                         <a href="/" className="text-white font-bold text-xl">ReacRadio</a>
                     </div>
                     <div className="flex items-center md:ml-auto">
-                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-300">
+                        <a href="https://github.com/NeeRaj-2401/ReacRadio" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-300">
                             <FaGithub className="h-6 w-6 fill-current" />
                         </a>
                     </div>
