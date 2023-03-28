@@ -12,53 +12,33 @@ function App() {
     try {
       axios
         .get(`https://de1.api.radio-browser.info/json/stations/topclick`)
-        .then(response1 => {
-          const results1 = response1.data;
-          //console.log(response1.data);
-          axios
-            .get(`https://de1.api.radio-browser.info/json/stations/bycountry/india`)
-            .then(response2 => {
-              const results2 = response2.data;
-              //console.log(response2.data);
-  
-              const mergedStations = [...results1, ...results2];
-              const filteredStations = Object.values(
-                mergedStations.reduce((map, station) => {
-                  if (station.language !== "hindi" || station.country !== "India") {
-                    return map; // skip stations that don't match language filter
-                  }
-                  let url = station.url;
-                  if (url.startsWith("http://") || url.endsWith(".m3u8")) {
-                    return map; // skip stations with URLs that start with "http://"
-                  }
-  
-                  const updatedStation = { ...station, url }; // create new object with updated url value
-                  if (!map[url]) {
-                    map[url] = updatedStation; // add the station to the map if it hasn't been seen before
-                  }
-                  return map;
-                }, {})
-              );
+        .then(response => {
+          const results = response.data;
+          //console.log(response.data)
 
-              
-              console.log(filteredStations);
-              setStations(filteredStations);
-              setIsLoading(false);
-            })
-            .catch(error => {
-              console.log({ error });
-              setIsLoading(false);
-            });
-        })
-        .catch(error => {
-          console.log({ error });
+          // filtering duplicate results
+          const filteredStations = Object.values(results.reduce((map, station) => {
+            const url = station.url;
+            if (station.language !== "hindi" || station.country !== "India" || url.startsWith("http://") || url.endsWith(".m3u8")) {
+              return map; // skip stations if not hindi/india or having hrl http:// or .m3u8
+            }
+            
+            if (!map[url]) {
+              map[url] = station; // add the station to the map if it hasn't been seen before
+            }
+            return map;
+          }, {}))
+
+          // const filteredStations = results.filter( station => station.language === "hindi" || station.language === "Hindi")
+          console.log(filteredStations)
+          setStations(filteredStations);
           setIsLoading(false);
         });
-    } catch (error) {
-      console.log({ error });
-      setIsLoading(false)
-    }
-  }, []);
+      } catch (error) {
+        console.log({ error });
+        setIsLoading(false)
+      }
+    }, []);
   
 
   const audioRef = useRef(null);
@@ -81,7 +61,7 @@ function App() {
     <div className="App min-h-screen bg-gray-900 text-gray-100 py-4">
       <h1 className="text-3xl font-bold text-gray-100 pb-4">Trending Hindi Stations</h1>
       <div className="container mx-auto px-4 md:px-0">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
 
           {<audio ref={audioRef} />}
           {stations.map((station) => (
