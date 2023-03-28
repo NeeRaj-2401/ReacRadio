@@ -8,11 +8,24 @@
       name="description"
       content="Web site created using create-react-app"
     />
-    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/128/3617/3617100.png" type="image/x-icon">
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/6361/6361657.png" type="image/x-icon">
     <title>Reac-Radio</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+
+    <script>
+      if('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./serviceWorker.js').then((reg) => {
+            console.log('Worker Registered')
+          }).catch((err) => {
+            console.log('Error in service worker registration.')
+          })
+        })
+      }
+    </script>
   </body>
 </html>
