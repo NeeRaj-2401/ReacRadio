@@ -12,34 +12,54 @@ function App() {
     try {
       axios
         .get(`https://de1.api.radio-browser.info/json/stations/topclick`)
-        .then(response => {
-          const results = response.data;
-          console.log(response.data)
+        .then(response1 => {
+          const results1 = response1.data;
+          //console.log(response1.data);
+          axios
+            .get(`https://de1.api.radio-browser.info/json/stations/bycountry/india`)
+            .then(response2 => {
+              const results2 = response2.data;
+              //console.log(response2.data);
+  
+              const mergedStations = [...results1, ...results2];
+              const filteredStations = Object.values(
+                mergedStations.reduce((map, station) => {
+                  if (station.language !== "hindi" || station.country !== "India") {
+                    return map; // skip stations that don't match language filter
+                  }
+                  let url = station.url;
+                  // if (url.startsWith("http://") || url.endsWith(".m3u8")) {
+                  //   return map; // skip stations with URLs that start with "http://"
+                  // }
+  
+                  const updatedStation = { ...station, url }; // create new object with updated url value
+                  if (!map[url]) {
+                    map[url] = updatedStation; // add the station to the map if it hasn't been seen before
+                  }
+                  return map;
+                }, {})
+              );
 
-          // filtering duplicate results
-          const filteredStations = Object.values(results.reduce((map, station) => {
-            if (station.language !== "hindi" && station.language !== "Hindi") {
-              return map; // skip stations that don't match language filter
-            }
-            const url = station.url;
-            if (!url.startsWith('https://')) {
-              url = url.replace('http://', 'https://'); // replace http with https in station URL
-            }
-            if (!map[url]) {
-              map[url] = station; // add the station to the map if it hasn't been seen before
-            }
-            return map;
-          }, {}))
-
-          // const filteredStations = results.filter( station => station.language === "hindi" || station.language === "Hindi")
-          console.log(filteredStations)
-          setStations(filteredStations);
+              
+              console.log(filteredStations);
+              setStations(filteredStations);
+              setIsLoading(false);
+            })
+            .catch(error => {
+              console.log({ error });
+              setIsLoading(false);
+            });
+        })
+        .catch(error => {
+          console.log({ error });
           setIsLoading(false);
         });
     } catch (error) {
       console.log({ error });
+      setIsLoading(false)
     }
   }, []);
+  
 
   const audioRef = useRef(null);
   const [currentStation, setCurrentStation] = useState(null);
