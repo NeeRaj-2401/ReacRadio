@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Loader from './Loader';
 import { FaPlay, FaPause } from 'react-icons/fa';
+import { FiRadio } from 'react-icons/fi';
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -79,18 +80,27 @@ function App() {
 
             >
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-gray-700 mr-4 cursor-pointer" onClick={() => handleStationClick(station)}>
-                {station.favicon && (
+                {currentStation?.url === station.url ? 
+                ( // if element is currently playing then show playing gif
                   <img
-                    src={station.favicon}
-                    alt={station.name}
+                    src="https://i.gifer.com/Nt6v.gif"
+                    alt={station.favicon}
                     className="w-8 h-8 object-cover object-center rounded-full"
                   />
-                )}
-                {!station.favicon && (
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="h-6 w-6 text-gray-100">
-                    <path fill="currentColor" d="M12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0 2a7 7 0 1 0 0-14 7 7 0 0 0 0 14zm0-11a1 1 0 1 1 0 2 3 3 0 0 1 0 6 1 1 0 0 1 0-2 1 1 0 0 0 0-2 1 1 0 1 1 0-2zm0-2a3 3 0 0 1 2.519 4.447l-1.414-1.414A1 1 0 1 0 12.707 8.3l1.414 1.414A3 3 0 0 1 12 6z" />
-                  </svg>
-                )}
+                ) 
+                :                   
+                ( // else for rest elements show station's icon
+                  station.favicon ? (
+                    <img
+                      src={station.favicon}
+                      alt={station.name}
+                      className="w-8 h-8 object-cover object-center rounded-full"
+                    />
+                  ) :
+                    (
+                      <FiRadio className="h-6 w-6 text-gray-100" />
+                    ))
+                }
 
               </div>
 
