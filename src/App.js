@@ -28,9 +28,9 @@ function App() {
                     return map; // skip stations that don't match language filter
                   }
                   let url = station.url;
-                  // if (url.startsWith("http://") || url.endsWith(".m3u8")) {
-                  //   return map; // skip stations with URLs that start with "http://"
-                  // }
+                  if (url.startsWith("http://") || url.endsWith(".m3u8")) {
+                    return map; // skip stations with URLs that start with "http://"
+                  }
   
                   const updatedStation = { ...station, url }; // create new object with updated url value
                   if (!map[url]) {
