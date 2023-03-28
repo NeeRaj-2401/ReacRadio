@@ -78,7 +78,7 @@ function App() {
   };
 
   return (
-    <div className="App bg-gray-900 text-gray-100 py-4">
+    <div className="App min-h-screen bg-gray-900 text-gray-100 py-4">
       <h1 className="text-3xl font-bold text-gray-100 pb-4">Trending Hindi Stations</h1>
       <div className="container mx-auto px-4 md:px-0">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
