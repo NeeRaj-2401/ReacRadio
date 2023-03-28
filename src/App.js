@@ -22,6 +22,9 @@ function App() {
               return map; // skip stations that don't match language filter
             }
             const url = station.url;
+            if (!url.startsWith('https://')) {
+              url = url.replace('http://', 'https://'); // replace http with https in station URL
+            }
             if (!map[url]) {
               map[url] = station; // add the station to the map if it hasn't been seen before
             }
